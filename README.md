@@ -2,6 +2,14 @@
 
 Your competitive programming helper.
 
+## Installation
+
+1. Get Python
+1. Get the repository (`git clone https://github.com/GGORG0/competibuddy.git`)
+1. Install the requirements (`pip install -r requirements.txt`)
+1. (optional) Add the `src` directory to your `PATH` environment variable if you want to use the `cbuddy` command from anywhere
+1. Look at the usage by running `cbuddy --help` (or `python src/cbuddy.py --help` if you didn't add the `src` directory to your `PATH` environment variable)
+
 ## Tester module
 
 The tester module is a simple tool to test your code against a set of test cases.
