@@ -41,7 +41,7 @@ def summary(passed, total):
 
 @argh.arg("program", help="The program to test. Can be an executable or a C++ source file (will be compiled).")
 @argh.arg("--test-dir", help="The directory containing the tests. Defaults to the parent directory of the program.")
-@argh.arg("--time-limit", help="The time limit for each test in seconds. Defaults to unlimited (0).")
+@argh.arg("--time-limit", help="The time limit for each test in seconds. Defaults to unlimited (0). Can also be provided in a file named TIMELIMIT.txt in the test directory.")
 def test(program: str, test_dir: str = "", time_limit: float = 0):
     """Run tests on the specified program."""
 
