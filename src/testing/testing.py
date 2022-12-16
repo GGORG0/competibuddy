@@ -34,7 +34,7 @@ def init_checks(program, test_dir):
 
 def summary(packs_passed: int, packs: List[libtest.TestPack], tests_passed: int, test_count: int):
     print()
-    print(colorama.Fore.CYAN + '=== Summary: ===' + colorama.Style.RESET_ALL)
+    print(colorama.Fore.CYAN + '=== Summary ===' + colorama.Style.RESET_ALL)
     if packs_passed == len(packs):
         console.success_icon('All tests passed!')
     else:
