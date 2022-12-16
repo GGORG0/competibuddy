@@ -113,4 +113,4 @@ def get_tests(test_dir: str, program: str, time_limit: float) -> List[TestPack]:
     packs.extend(get_json_tests(alltests, test_dir, program, time_limit))
     packs.extend(get_generator_tests(alltests, test_dir, program, time_limit))
 
-    return packs
+    return [pack for pack in packs if len(pack) > 0]
