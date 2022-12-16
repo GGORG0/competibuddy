@@ -20,7 +20,7 @@ def get_in_tests(alltests: FunctionType | None, test_dir: str, program: str, tim
         pack_name = os.path.basename(os.path.abspath(pack_dir)) + "#f"
         pack_tests = []
         sys.path.append(os.path.join(test_dir, pack_dir))
-        for x in glob.glob(os.path.join(pack_dir, '*.in')):
+        for x in glob.glob(os.path.join(test_dir, pack_dir, '*.in')):
             name = os.path.basename(x)[:-3]
 
             # Read the input
