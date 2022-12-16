@@ -69,12 +69,12 @@ def get_generator_tests(alltests, test_dir):
     if os.path.isfile(os.path.join(test_dir, 'GENERATOR.py')):
         generator = importlib.import_module('GENERATOR').generate
         for name, test_type, test in generator():
-            if test_type == TestType.STATIC:
+            if test_type == TestType.STATIC.value:
                 inp, outp = test
-                tests[name + '#gen'] = (test_type, inp, outp)
-            elif test_type == TestType.CHECKER:
+                tests[name + '#gen'] = (TestType.STATIC, inp, outp)
+            elif test_type == TestType.CHECKER.value:
                 inp = test
-                tests[name + '#gen/atpy'] = (test_type, inp, alltests)
+                tests[name + '#gen/atpy'] = (TestType.CHECKER, inp, alltests)
 
     return tests
 
