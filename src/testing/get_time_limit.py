@@ -2,7 +2,7 @@ import os
 
 
 def get_time_limit(test_dir, time_limit):
-    if time_limit is not None:
+    if time_limit is not None and time_limit != 0:
         return float(time_limit)
 
     if os.path.isfile(os.path.join(test_dir, 'TIMELIMIT.txt')):
