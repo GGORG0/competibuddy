@@ -14,7 +14,7 @@ def get_in_tests(alltests: FunctionType | None, test_dir: str, program: str, tim
 
     packs = []
 
-    for pack_dir in os.listdir(test_dir) + ['']:
+    for pack_dir in os.listdir(test_dir) + [test_dir]:
         if not os.path.isdir(os.path.join(test_dir, pack_dir)) or pack_dir == '__pycache__':
             continue
         pack_name = os.path.basename(os.path.abspath(pack_dir)) + "#f"
