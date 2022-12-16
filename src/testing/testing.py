@@ -1,11 +1,13 @@
+from typing import List
 import argh
 import os
 import sys
 import utils.console as console
 import testing.get_tests as get_tests
 import testing.get_time_limit as get_time_limit
-import testing.run_tests as run_tests
 import testing.compile as compile
+import testing.test as libtest
+import colorama
 
 
 def init_checks(program, test_dir):
@@ -30,13 +32,22 @@ def init_checks(program, test_dir):
     return program, test_dir
 
 
-def summary(passed, total):
+def summary(packs_passed: int, packs: List[libtest.TestPack], tests_passed: int, test_count: int):
     print()
-    if passed == total:
+    print(colorama.Fore.CYAN + '=== Summary: ===' + colorama.Style.RESET_ALL)
+    if packs_passed == len(packs):
         console.success_icon('All tests passed!')
     else:
         console.error_icon(
-            f'Passed {passed} out of {total} tests ({round(passed/total*100)}%).')
+            f'Passed {packs_passed} out of {len(packs)} packs ({round(packs_passed/len(packs)*100)}%).')
+        console.error(
+            f'  That\'s {tests_passed} out of {test_count} tests ({round(tests_passed/test_count*100)}%).')
+        for i, pack in enumerate(packs, start=1):
+            if pack.passed_tests == len(pack):
+                console.success_icon(f'{i} {console.icons["pointer"]} {pack}')
+            else:
+                console.error_icon(f'{i} {console.icons["pointer"]} {pack}')
+
 
 
 @argh.arg("program", help="The program to test. Can be an executable or a C++ source file (will be compiled).")
@@ -47,8 +58,9 @@ def test(program: str, test_dir: str = "", time_limit: float = 0):
 
     program, test_dir = init_checks(program, test_dir)
     program = compile.compile_file(program)
-    tests = get_tests.get_tests(test_dir)
     time_limit = get_time_limit.get_time_limit(test_dir, time_limit)
+    packs = get_tests.get_tests(test_dir, program, time_limit)
     print()
-    passed = run_tests.run_tests(program, tests, time_limit)
-    summary(passed, len(tests))
+    passed_packs, pack_count, passed_tests, test_count = libtest.run_packs(
+        packs)
+    summary(passed_packs, packs, passed_tests, test_count)

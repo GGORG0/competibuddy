@@ -14,10 +14,7 @@ parser.add_commands([testing.test])
 def main():
     colorama.init()
 
-    try:
-        parser.dispatch()
-    except Exception as e:
-        console.error_message(str(e))
+    parser.dispatch()
 
 
 if __name__ == "__main__":
