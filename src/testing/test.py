@@ -164,10 +164,11 @@ class TestPack(List[Test]):
     def run(self):
         self.passed_tests = 0
         self.ran_tests = 0
+        total_tests = len(self)
         try:
             for i, test in enumerate(self, start=1):
                 console.in_progress(
-                    f' {console.icons["pointer"]} [{self.name}: {i}/{self.ran_tests}] Running {"checker" if test.test_type == TestType.CHECKER else "static"} test {test.name}...')
+                    f' {console.icons["pointer"]} [{self.name}: {i}/{total_tests}: {round(i/total_tests*100)}%] Running {"checker" if test.test_type == TestType.CHECKER else "static"} test {test.name}...')
                 if test.run():
                     self.passed_tests += 1
                 self.ran_tests += 1
