@@ -43,9 +43,9 @@ def summary(packs_passed: int, packs: List[libtest.TestPack], tests_passed: int,
         console.error(
             f'  That\'s {tests_passed} out of {test_count} tests ({round(tests_passed/test_count*100)}%).')
         for i, pack in enumerate(packs, start=1):
-            if len(pack) == 0 or pack.passed_tests == -1:
+            if len(pack) == 0 or pack.ran_tests == -1 or pack.passed_tests == -1:
                 continue
-            if pack.passed_tests == len(pack):
+            if pack.passed_tests == pack.ran_tests:
                 console.success_icon(f'{i} {console.icons["pointer"]} {pack}')
             else:
                 console.error_icon(f'{i} {console.icons["pointer"]} {pack}')

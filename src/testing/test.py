@@ -145,42 +145,50 @@ class Test():
 class TestPack(List[Test]):
     name: str = ""
     passed_tests: int = -1
+    ran_tests: int = -1
 
     def __init__(self, name: str, tests: List[Test]):
         self.name = name
         super().__init__(tests)
 
     def summary(self):
-        total = len(self)
-        if self.passed_tests == total:
+        if self.ran_tests < len(self):
+            console.warning_icon(
+                f'[{self.name}] Ran only {self.ran_tests} out of {len(self)} tests.')
+        if self.passed_tests == self.ran_tests:
             console.success_icon(f'[{self.name}] All tests passed!')
         else:
             console.error_icon(
-                f'[{self.name}] Passed {self.passed_tests} out of {total} tests ({round(self.passed_tests/total*100)}%).')
+                f'[{self.name}] Passed {self.passed_tests} out of {self.ran_tests} tests ({round(self.passed_tests/self.ran_tests*100)}%).')
 
     def run(self):
         self.passed_tests = 0
-        test_count = len(self)
-        for i, test in enumerate(self, start=1):
-            console.in_progress(
-                f' {console.icons["pointer"]} [{self.name}: {i}/{test_count}] Running {"checker" if test.test_type == TestType.CHECKER else "static"} test {test.name}...')
-            if test.run():
-                self.passed_tests += 1
+        self.ran_tests = 0
+        try:
+            for i, test in enumerate(self, start=1):
+                console.in_progress(
+                    f' {console.icons["pointer"]} [{self.name}: {i}/{self.ran_tests}] Running {"checker" if test.test_type == TestType.CHECKER else "static"} test {test.name}...')
+                if test.run():
+                    self.passed_tests += 1
+                self.ran_tests += 1
+        except KeyboardInterrupt:
+            print()
+            console.error_icon('Interrupted!')
         self.summary()
-        return self.passed_tests, test_count
+        return self.passed_tests, self.ran_tests
 
     def __str__(self):
-        if self.passed_tests > 0:
-            return f"{self.name} ({self.passed_tests}/{len(self)} - {round(self.passed_tests/len(self)*100)}% tests passed)"
+        if self.passed_tests > 0 and self.ran_tests > 0:
+            return f"{self.name} ({self.passed_tests}/{self.ran_tests} - {round(self.passed_tests/self.ran_tests*100)}% tests passed)"
         else:
-            return f"{self.name} ({len(self)} tests)"
+            return f"{self.name} ({self.ran_tests} tests)"
 
 
 def run_packs(packs: List[TestPack]):
     passed_packs = 0
     passed_tests = 0
     pack_count = len(packs)
-    test_count = sum(len(pack) for pack in packs)
+    test_count = 0
     for i, pack in enumerate(packs, start=1):
         if len(pack) == 0:
             continue
@@ -188,9 +196,10 @@ def run_packs(packs: List[TestPack]):
         console.in_progress(
             f'[{i}/{pack_count}] Running test pack {pack.name}...', True)
 
-        pack_passed_tests, pack_total_tests = pack.run()
+        pack_passed_tests, pack_ran_tests = pack.run()
+        test_count += pack_ran_tests
         passed_tests += pack_passed_tests
-        if pack_passed_tests == pack_total_tests:
+        if pack_passed_tests == pack_ran_tests:
             passed_packs += 1
 
     return passed_packs, pack_count, passed_tests, test_count
